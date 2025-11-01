@@ -5,12 +5,17 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - echo "Installing dependencies..."
+      - echo Installing dependencies...
       - npm install
   build:
     commands:
-      - echo "Build complete. Packaging for Elastic Beanstalk deployment..."
+      - echo Building Node.js backend...
+      - npm run build || echo "No build script found, skipping..."
+  post_build:
+    commands:
+      - echo Packaging for Elastic Beanstalk...
+      - zip -r backend.zip * .[^.]*
+
 artifacts:
   files:
-    - '**/*'
-  discard-paths: no
+    - backend.zip
